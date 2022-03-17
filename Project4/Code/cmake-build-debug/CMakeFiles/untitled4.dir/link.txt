@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/untitled4.dir/main.c.o CMakeFiles/untitled4.dir/Database.c.o CMakeFiles/untitled4.dir/Tuple.c.o CMakeFiles/untitled4.dir/Query.c.o CMakeFiles/untitled4.dir/Algebra.c.o  -o untitled4 

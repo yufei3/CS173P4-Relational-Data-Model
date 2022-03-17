@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/rainyzhao/CLionProjects/untitled4/Algebra.h
+Database.h
+/Users/rainyzhao/CLionProjects/untitled4/Database.h
+
+/Users/rainyzhao/CLionProjects/untitled4/Database.h
+Tuple.h
+/Users/rainyzhao/CLionProjects/untitled4/Tuple.h
+stdio.h
+-
+
+/Users/rainyzhao/CLionProjects/untitled4/Query.h
+Database.h
+/Users/rainyzhao/CLionProjects/untitled4/Database.h
+
+/Users/rainyzhao/CLionProjects/untitled4/Tuple.h
+string.h
+-
+stdio.h
+-
+stdlib.h
+-
+stdbool.h
+-
+
+/Users/rainyzhao/CLionProjects/untitled4/main.c
+stdio.h
+-
+Query.h
+/Users/rainyzhao/CLionProjects/untitled4/Query.h
+Algebra.h
+/Users/rainyzhao/CLionProjects/untitled4/Algebra.h
+

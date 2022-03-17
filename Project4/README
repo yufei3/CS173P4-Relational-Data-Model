@@ -1,0 +1,196 @@
+Project 4
+a. Creator: Yufei Zhao
+
+
+b. How to build my project:
+Part 1:
+I first create several tuple objects for each relation. Then I create a database which includes the hash table for each relation. For each relation, I select one attribute as key to do the hashing and then put the tuple to the corresponding position in the table. For CSG and SNAP, I use studentID as the key; and for CR, CP, and CDH, I use course as the key. 
+For insert functions, I just use the hash function to find the right index of the tuple and add the tuple to the first place of the bucket. For delete and lookup functions, if the key attribute is not *, I first find the bucket of that tuple and then check all the tuples in the bucket; if the key attribute is *, then I do the linear search.
+I first do many insert to make my relation be the relations shown in 8.1 and 8.2. Then I do the 5 operations of Example 8.2. And after I do the lookup, insert, and delete shown in Example 8.2, I undo the insert and delete to better perform the part 2 and part 3. 
+
+Part 2:
+What grade did StudentName get in CourseName?
+/*
+ * Question 1
+ * for all tuples that have inputStudentName as name
+ * find their studentID with the SNAP relation
+ * find each tuple T with the given studentID and inputCourseName with the CSG relation
+ * print the grade of T
+ */
+Where is StudentName at Time on Day?
+/*
+ * for all tuples in SNAP, find the studentID with inputStudentName as name
+ * find all courses they take with CSG relation
+ * check whether there is a CDH tuple with the found course, inputDay, inputTime as components
+ * if there is, find the corresponding room of that found course in CR relation
+ */
+
+Part 3:
+8.12(Selection)--For all the CSG tuples, find the tuples with the required Course component;
+8.13(Projection)--I create a new relation with tuples only having StudentID attribute. Then for all the CSG tuples I only record their studentID attribute without duplication;
+8.14(Join)--For each CR tuple, go through all CDH tuples. If there is a pair of CR and CDH tuples with the same Course component, I create a new CRDH tuple with the CR tuple and CDH tuple;
+8.15(all three)--I first select the CRDH tuples based on the Room component. Then I only record the day and hour attributes of the selected tuples. 
+
+c. Content of my project:
+Tuple.c: tuple implementation, new_tuple functions, and the compare functions of two tuples of the same kind. 
+Database.c: database implementation, insert, delete, and lookup functions.
+Query.c: 2 functions for answering two questions & a function Query that performs REPL.
+Algebra.c: the necessary select, project, and join functions for 8.12-8.15.
+main.c: tester file
+
+
+d. How to run my project:
+In the terminal:
+First type: gcc -std=c99 -Wall -Werror Algebra.c Database.c main.c Query.c Tuple.c -o main;
+Then type: ./main
+
+e. Extra Credit:
+I do the Extra Credit 1. I create 5 files for 5 relations. Each line represents a tuple, and the components of each tuple are separated by commas. The tuples I have in the files are the ones that shown in FOCS 8.1 and 8.2. The operation demonstration is not in the file.
+
+
+f. My Sample output:
+RainydeMacBook-Pro:~ rainyzhao$ cd Desktop
+RainydeMacBook-Pro:Desktop rainyzhao$ cd Project4
+RainydeMacBook-Pro:Project4 rainyzhao$ ls
+Algebra.c		Database.h		Tuple.h
+Algebra.h		Query.c			cmake-build-debug
+CMakeLists.txt		Query.h			main
+Database.c		Tuple.c			main.c
+RainydeMacBook-Pro:Project4 rainyzhao$ gcc -std=c99 -Wall -Werror Algebra.c Database.c main.c Query.c Tuple.c -o main
+RainydeMacBook-Pro:Project4 rainyzhao$ ./main
+
+Course-StudentID-Grade relation
+EE200 22222 B+
+CS101 12345 A
+EE200 12345 C
+CS101 33333 A-
+CS101 67890 B
+PH100 67890 C+
+
+StudentID-Name-Address-Phone relation
+22222 P.Patty 56 Grape Blvd. 555-9999
+12345 C.Brown 12 Apple St. 555-1234
+67890 L.Van Pelt 34 Pear Ave. 555-5678
+
+Course-Prerequisite relation
+CS205 CS101
+CS206 CS121
+CS206 CS205
+EE200 EE005
+EE200 CS100
+CS101 CS100
+CS120 CS101
+CS121 CS120
+
+Course-Day-Hour relation
+EE200 Tu 10AM
+EE200 W 1PM
+EE200 Th 10AM
+CS101 M 9AM
+CS101 W 9AM
+CS101 F 9AM
+
+Course-Room relation
+EE200 25 Ohm Hall
+CS101 Turing Aud.
+PH100 Newton Lab.
+
+Operations of Example 8.2.
+lookup((CS101, 12345,*), Course-StudentId-Grade): CS101 12345 A
+EE200 12345 C
+CS101 33333 A-
+
+lookup((CS205, CS120), Course-Prerequisite): delete((CS101, *), Course-Room):
+ After delete the tuple(s), the CR relation
+EE200 25 Ohm Hall
+PH100 Newton Lab.
+
+insert((CS205, CS120), Course-Prerequisite):
+After insert the tuple(s), the CP relation
+CS205 CS101
+CS205 CS120
+CS206 CS121
+CS206 CS205
+EE200 EE005
+EE200 CS100
+CS101 CS100
+CS120 CS101
+CS121 CS120
+
+insert((CS205, CS101), Course-Prerequisite):
+After insert the tuple(s), the CP relation
+CS205 CS101
+CS205 CS120
+CS206 CS121
+CS206 CS205
+EE200 EE005
+EE200 CS100
+CS101 CS100
+CS120 CS101
+CS121 CS120
+
+Please enter the index of question (1 for What Question, 2 for Where Question, 0 for stop): 1
+What grade did StudentName get in CourseName?
+Enter student name: C.Brown
+Enter course name: EE200
+What grade did C.Brown get in EE200?
+EE200 get C in EE200.
+
+Please enter the index of question (1 for What Question, 2 for Where Question, 0 for stop): 1
+What grade did StudentName get in CourseName?
+Enter student name: P.Patty
+Enter course name: CS101
+What grade did P.Patty get in CS101?
+Do not find the grade with given studentName and courseName.
+
+Please enter the index of question (1 for What Question, 2 for Where Question, 0 for stop): 2
+Where is StudentName at Time on Day?
+Enter student name: C.Brown
+Enter hour: 1PM
+Enter day: W
+Where is C.Brown at 1PM on W?
+C.Brown is at 25 Ohm Hall at 1PM on W.
+
+Please enter the index of question (1 for What Question, 2 for Where Question, 0 for stop): 2
+Where is StudentName at Time on Day?
+Enter student name: L.Van Pelt
+Enter hour: CS101
+Enter day: M
+Where is L.Van Pelt at CS101 on M?
+Do not find the corresponding course with given studentName, hour, and day.
+
+Please enter the index of question (1 for What Question, 2 for Where Question, 0 for stop): 2
+Where is StudentName at Time on Day?
+Enter student name: L.Van Pelt
+Enter hour: 9AM
+Enter day: F
+Where is L.Van Pelt at 9AM on F?
+L.Van Pelt is at Turing Aud. at 9AM on F.
+
+Please enter the index of question (1 for What Question, 2 for Where Question, 0 for stop): 0
+Exit...
+
+8.12: Selection of CSG based on Course CS101.
+CS101 12345 A
+CS101 33333 A-
+CS101 67890 B
+
+8.13: Projection of CSG onto studentID.
+12345
+33333
+67890
+
+8.14 Join CR and CDH.
+EE200 25 Ohm Hall Tu 10AM
+EE200 25 Ohm Hall W 1PM
+EE200 25 Ohm Hall Th 10AM
+CS101 Turing Aud. M 9AM
+CS101 Turing Aud. W 9AM
+CS101 Turing Aud. F 9AM
+
+8.15 Select for those tuples having Room Turing Aud.
+Project onto Day and Hour.
+M 9AM
+W 9AM
+F 9AM
+
